@@ -1,0 +1,6 @@
+@SimpleEWallet.Wallet_HostAddress = http://localhost:5028
+
+GET {{SimpleEWallet.Wallet_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
