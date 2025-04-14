@@ -33,6 +33,23 @@ namespace SimpleEWallet.Auth.Controllers
 			return ResponseToActionResult(response);
 		}
 
+		[HttpPost("get-self-data")]
+		public async Task<IActionResult> GetSelf()
+		{
+			GetUserByIdResponse response = new();
+			try
+			{
+				ClaimTokenResponse claimTokenResponse = await _mediator.Send(new ClaimTokenQuery(this));
+				GetUserByIdParameters parameters = new() { UserId = claimTokenResponse.Data.UserId };
+				_ = !claimTokenResponse.IsValid ? response.SetUnauthorized() : response = await _mediator.Send(new GetUserByIdQuery(parameters));
+			}
+			catch (Exception ex)
+			{
+				response.SetErrorMessage(ex.Message);
+			}
+			return ResponseToActionResult(response);
+		}
+
 		[HttpPost("create")]
 		public async Task<IActionResult> Create([FromBody] UserParameters parameters)
 		{
