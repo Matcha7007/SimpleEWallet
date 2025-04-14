@@ -1,0 +1,1 @@
+﻿dotnet ef dbcontext scaffold "User ID=admin_db;Password=admin;Server=localhost;Port=5432;Database=ewallet_db_wallet;Pooling=true;" Npgsql.EntityFrameworkCore.PostgreSQL --output-dir Domain --context-dir Persistence --context WalletDbContext --force
