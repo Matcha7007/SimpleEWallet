@@ -68,7 +68,7 @@ namespace SimpleEWallet.Auth.Features.Commands
 				user.Phone = request.Parameters.Phone;
 				user.PasswordHash = HashTool.DoHash(request.Parameters.Password);
 				user.PinHash = HashTool.DoHash(request.Parameters.Pin);
-				user.LastModifiedAt = DateTime.UtcNow;
+				user.LastModifiedAt = DateTime.Now;
 				user.LastModifiedBy = request.Parameters.UserId;
 				await context.SaveChangesAsync(cancellationToken);
 				response.Message = "User has been updated";

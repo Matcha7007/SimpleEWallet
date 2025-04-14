@@ -40,7 +40,7 @@ namespace SimpleEWallet.Auth.Features.Commands
 
 				#region Delete User
 				user.IsActive = false;
-				user.LastModifiedAt = DateTime.UtcNow;
+				user.LastModifiedAt = DateTime.Now;
 				user.LastModifiedBy = request.Parameters.UserId;
 				await context.SaveChangesAsync(cancellationToken);
 				response.Message = "User has been deleted";

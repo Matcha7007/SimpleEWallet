@@ -14,7 +14,7 @@ namespace SimpleEWallet.Auth.Tools
 				"Yh2k7QSu4l8CZg5p6X3Pna9L0Miy4D3Bvt0JVr87UcOj69Kqw5R2Nmf4FWs03Hdx"
 				, "JWTAuthenticationSimpleEWallet"
 				, "JWTServiceSimpleEWalletClient"
-				, 5 > 0 ? DateTime.UtcNow.AddMinutes(5) : null
+				, 5 > 0 ? DateTime.Now.AddMinutes(5) : null
 				, listClaim
 			);
 		}

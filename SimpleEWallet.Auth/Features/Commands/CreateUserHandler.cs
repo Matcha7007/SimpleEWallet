@@ -83,8 +83,8 @@ namespace SimpleEWallet.Auth.Features.Commands
 					Phone = request.Parameters.Phone,
 					PasswordHash = HashTool.DoHash(request.Parameters.Password),
 					PinHash = HashTool.DoHash(request.Parameters.Pin),
-					CreatedAt = DateTime.UtcNow,
-					LastModifiedAt = DateTime.UtcNow
+					CreatedAt = DateTime.Now,
+					LastModifiedAt = DateTime.Now
 				};
 				context.MstUsers.Add(newUser);
 				await context.SaveChangesAsync(cancellationToken);
