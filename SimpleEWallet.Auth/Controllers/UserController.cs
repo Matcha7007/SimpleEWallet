@@ -1,20 +1,21 @@
 ﻿using MediatR;
 
 using Microsoft.AspNetCore.Mvc;
+
 using SimpleEWallet.Auth.Features.Commands;
 using SimpleEWallet.Auth.Features.Queries;
 using SimpleEWallet.Comon.Base.Controller;
 using SimpleEWallet.Comon.Base.WebAPI;
 using SimpleEWallet.Comon.Models.Auth;
 
-namespace QuickAcq.Svc.Auth.Controllers
+namespace SimpleEWallet.Auth.Controllers
 {
 	[ApiController]
     [Route("api/v1/[controller]")]
     public class UserController(IMediator _mediator) : BaseAPIController
     {
 		[HttpGet("is-online")]
-		public string IsOnline() => this.IsOnlineMessage();
+		public string IsOnline() => IsOnlineMessage();
 
 		[HttpPost("get-by-id")]
 		public async Task<IActionResult> GetById([FromBody] GetUserByIdParameters parameters)
@@ -29,7 +30,7 @@ namespace QuickAcq.Svc.Auth.Controllers
 			{
 				response.SetErrorMessage(ex.Message);
 			}
-			return this.ResponseToActionResult(response);
+			return ResponseToActionResult(response);
 		}
 
 		[HttpPost("create")]
@@ -44,7 +45,7 @@ namespace QuickAcq.Svc.Auth.Controllers
 			{
 				response.SetErrorMessage(ex.Message);
 			}
-			return this.ResponseToActionResult(response);
+			return ResponseToActionResult(response);
 		}
 
 		[HttpPost("update")]
@@ -60,7 +61,7 @@ namespace QuickAcq.Svc.Auth.Controllers
 			{
 				response.SetErrorMessage(ex.Message);
 			}
-			return this.ResponseToActionResult(response);
+			return ResponseToActionResult(response);
 		}
 
 		[HttpPost("delete")]
@@ -76,7 +77,7 @@ namespace QuickAcq.Svc.Auth.Controllers
 			{
 				response.SetErrorMessage(ex.Message);
 			}
-			return this.ResponseToActionResult(response);
+			return ResponseToActionResult(response);
 		}
 
 		[HttpPost("search-receiver")]
@@ -92,7 +93,7 @@ namespace QuickAcq.Svc.Auth.Controllers
 			{
 				response.SetErrorMessage(ex.Message);
 			}
-			return this.ResponseToActionResult(response);
+			return ResponseToActionResult(response);
 		}
 	}
 }
