@@ -137,6 +137,8 @@ namespace SimpleEWallet.Comon.Base.WebAPI
 		public static TResponse SetUnauthorized<TResponse>(this TResponse response)
 			where TResponse : BaseResponse
 		{
+			response.Message = "Invalid Token";
+			response.IsValid = false;
 			response.StatusCode = (int)HttpStatusCode.Unauthorized;
 			return response;
 		}

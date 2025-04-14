@@ -8,7 +8,7 @@ namespace SimpleEWallet.Comon.Base.Controller
 	/// Provides a base class for an API Controller
 	/// </summary>
 	[ApiController]
-	[Route("api/[controller]")]
+	[Route("api/v1/[controller]")]
 	public class BaseAPIController : ControllerBase
 	{
 		/// <summary>
