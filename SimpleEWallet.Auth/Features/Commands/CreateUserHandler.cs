@@ -6,16 +6,20 @@ using SimpleEWallet.Auth.Persistence;
 using SimpleEWallet.Auth.Domain;
 using Microsoft.EntityFrameworkCore;
 using SimpleEWallet.Auth.Tools;
+using SimpleEWallet.Comon.MQ;
+using MassTransit;
 
 namespace SimpleEWallet.Auth.Features.Commands
 {
-	public class CreateUserHandler(AuthDbContext context) : IRequestHandler<CreateUserCommand, UserResponse?>
+	public class CreateUserHandler(AuthDbContext context, ISendEndpointProvider send) : IRequestHandler<CreateUserCommand, UserResponse?>
 	{
 		public async Task<UserResponse?> Handle(CreateUserCommand request, CancellationToken cancellationToken)
 		{
 			UserResponse response = new();
 			try
 			{
+				await context.Database.BeginTransactionAsync(cancellationToken);
+
 				#region Validation
 				if (request.Parameters == null)
 				{
@@ -86,10 +90,24 @@ namespace SimpleEWallet.Auth.Features.Commands
 				await context.SaveChangesAsync(cancellationToken);
 				response.Message = "User has been created";
 				#endregion
+
+				#region Create Wallet
+				InitializeWalletMessage walletMessage = new()
+				{
+					UserId = newUser.Id,
+					WalletNumber = request.Parameters.Phone,
+					WalletName = request.Parameters.FullName
+				};
+				ISendEndpoint sendEndpoint = await send.GetSendEndpoint(new Uri("queue:" + MQQueueNames.Wallet.InitializeWallet));
+				await sendEndpoint.Send(walletMessage, cancellationToken);
+				#endregion
+
+				await context.Database.CommitTransactionAsync(cancellationToken);
 			}
 			catch (Exception ex)
 			{
 				response.SetErrorMessage(ex.Message);
+				await context.Database.RollbackTransactionAsync(cancellationToken);
 			}
 			return response;
 		}
