@@ -21,6 +21,10 @@ public partial class MstWallet
 
     public DateTime? LastModifiedAt { get; set; }
 
+    public string WalletNumber { get; set; } = null!;
+
+    public string WalletName { get; set; } = null!;
+
     public virtual ICollection<TrnTopupRequest> TrnTopupRequests { get; set; } = new List<TrnTopupRequest>();
 
     public virtual ICollection<TrnTransfer> TrnTransferReceiverWallets { get; set; } = new List<TrnTransfer>();

@@ -112,6 +112,12 @@ public partial class WalletDbContext : DbContext
                 .HasColumnName("last_modified_at");
             entity.Property(e => e.LastModifiedBy).HasColumnName("last_modified_by");
             entity.Property(e => e.UserId).HasColumnName("user_id");
+            entity.Property(e => e.WalletName)
+                .HasMaxLength(100)
+                .HasColumnName("wallet_name");
+            entity.Property(e => e.WalletNumber)
+                .HasMaxLength(14)
+                .HasColumnName("wallet_number");
         });
 
         modelBuilder.Entity<TrnTopupRequest>(entity =>
