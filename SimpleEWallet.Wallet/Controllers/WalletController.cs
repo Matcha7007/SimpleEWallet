@@ -1,33 +1,36 @@
 ﻿using MediatR;
 
 using Microsoft.AspNetCore.Mvc;
+
 using SimpleEWallet.Comon.Base.Controller;
 using SimpleEWallet.Comon.Base.WebAPI;
 using SimpleEWallet.Comon.Models.Auth;
+using SimpleEWallet.Comon.Models.Wallet;
+using SimpleEWallet.Wallet.Features.Queries;
 
-namespace QuickAcq.Svc.Auth.Controllers
+namespace SimpleEWallet.Wallet.Controllers
 {
 	[ApiController]
     [Route("api/v1/[controller]")]
     public class WalletController(IMediator _mediator) : BaseAPIController
     {
 		[HttpGet("is-online")]
-		public string IsOnline() => this.IsOnlineMessage();
+		public string IsOnline() => IsOnlineMessage();
 
-		[HttpPost("get-by-id")]
-		public async Task<IActionResult> GetById([FromBody] GetUserByIdParameters parameters)
+		[HttpPost("get-by-user-id")]
+		public async Task<IActionResult> GetByUserId([FromBody] GetWalletByUserIdParameters parameters)
 		{
-			GetUserByIdResponse response = new();
+			GetWalletByUserIdResponse response = new();
 			try
 			{
-				//ClaimTokenResponse claimTokenResponse = await _mediator.Send(new ClaimTokenQuery(this));
-				//_ = !claimTokenResponse.IsValid ? response.SetUnauthorized() : response = await _mediator.Send(new GetUserByIdQuery(parameters));
+				ClaimTokenResponse claimTokenResponse = await _mediator.Send(new ClaimTokenQuery(this));
+				_ = !claimTokenResponse.IsValid ? response.SetUnauthorized() : response = await _mediator.Send(new GetWalletByUserIdQuery(parameters));
 			}
 			catch (Exception ex)
 			{
 				response.SetErrorMessage(ex.Message);
 			}
-			return this.ResponseToActionResult(response);
+			return ResponseToActionResult(response);
 		}
 	}
 }
