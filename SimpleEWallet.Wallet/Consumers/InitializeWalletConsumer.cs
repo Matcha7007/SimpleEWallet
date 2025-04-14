@@ -29,9 +29,9 @@ namespace SimpleEWallet.Wallet.Consumers
 						WalletName = data.WalletName,
 						Balance = 0,
 						IsActive = true,
-						CreatedAt = DateTime.UtcNow,
+						CreatedAt = DateTime.Now,
 						CreatedBy = data.UserId,
-						LastModifiedAt = DateTime.UtcNow,
+						LastModifiedAt = DateTime.Now,
 						LastModifiedBy = data.UserId
 					};
 
