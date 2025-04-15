@@ -32,9 +32,10 @@ namespace SimpleEWallet.Wallet.Features.Queries
 				#region Check Wallet User
 				MstWallet? walletUser = await context.MstWallets
 					.Where(x => x.UserId == request.Parameters.UserId && x.IsActive == true)
-					.Include(x => x.TrnTopupRequests)
-					.Include(x => x.TrnTransferReceiverWallets)
-					.Include(x => x.TrnTransferSenderWallets)
+					//.Include(x => x.TrnTopupRequests)
+					//.Include(x => x.TrnTransferReceiverWallets)
+					//.Include(x => x.TrnTransferSenderWallets)
+					.AsNoTracking()
 					.FirstOrDefaultAsync(cancellationToken);
 
 				if (walletUser == null)

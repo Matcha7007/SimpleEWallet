@@ -14,7 +14,9 @@ public partial class TransactionListItemDto : BaseDto
 
     public decimal? Amount { get; set; }
 
-    public string? CashFlow { get; set; }
+	public string? AmountToDisplay { get; set; } = string.Empty;
+
+	public string? CashFlow { get; set; }
 
     public string? Reference { get; set; }
 

@@ -34,7 +34,7 @@ namespace SimpleEWallet.Wallet.Features.Commands
 				}
 				if (request.Parameters.Amount < GlobalConstant.Wallet.MinimumTopupAmount)
 				{
-					response.SetValidationMessage($"Minimum top-up amount must be greater than or equal to IDR {GlobalConstant.Wallet.MinimumTopupAmount.ToDisplayMoney()}");
+					response.SetValidationMessage($"Minimum top-up amount must be greater than or equal to IDR{GlobalConstant.Wallet.MinimumTopupAmount.ToDisplayMoney()}");
 					return response;
 				}
 				if (request.Parameters.UserId == Guid.Empty)
