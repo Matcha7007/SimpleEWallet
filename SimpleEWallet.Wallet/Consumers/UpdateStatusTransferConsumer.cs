@@ -23,7 +23,7 @@ namespace SimpleEWallet.Wallet.Consumers
 					.Include(x => x.ReceiverWallet)
 					.FirstOrDefaultAsync();
 
-				if (dataTransfer == null)
+				if (dataTransfer != null)
 				{
 					await Task.Delay(TimeSpan.FromMinutes(1));
 					dataTransfer!.StatusId = StatusConstants.Success.ToInt32();

@@ -16,16 +16,18 @@ namespace SimpleEWallet.Transaction.Consumers
 
 				DeleteDataTransactionMessage data = context.Message;
 
-				TrnTransaction? transaction = await _dbContext.TrnTransactions
-					.Where(x => x.WalletId == data.WalletId && x.IsActive == true)					
-					.FirstOrDefaultAsync();
+				List<TrnTransaction> transactions = await _dbContext.TrnTransactions
+					.Where(x => x.WalletId == data.WalletId && x.IsActive == true).ToListAsync();
 
-				if (transaction != null)
+				if (transactions.Count > 0)
 				{
-					transaction.IsActive = false;
-					transaction.LastModifiedAt = DateTime.UtcNow;
-					transaction.LastModifiedBy = data.UserId;
-					
+					transactions.ForEach(x =>
+					{
+						x.IsActive = false;
+						x.LastModifiedAt = DateTime.Now;
+						x.LastModifiedBy = data.UserId;
+					});
+
 					await _dbContext.SaveChangesAsync();
 					await _dbContext.Database.CommitTransactionAsync();
 				}
