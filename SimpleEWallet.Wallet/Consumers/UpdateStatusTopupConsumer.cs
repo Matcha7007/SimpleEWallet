@@ -39,7 +39,8 @@ namespace SimpleEWallet.Wallet.Consumers
 						UserId = data.UserId,
 						WalletId = dataTopup.WalletId,
 						TransactionTypeId = TransactionTypeConstants.Topup.ToInt32(),
-						Amount = dataTopup.Amount
+						Amount = dataTopup.Amount,
+						TransactionRequestId = dataTopup.Id
 					};
 					ISendEndpoint sendEndpoint = await send.GetSendEndpoint(new Uri("queue:" + MQQueueNames.Transaction.AddTransaction));
 					await sendEndpoint.Send(message);

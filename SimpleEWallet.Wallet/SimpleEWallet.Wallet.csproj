@@ -24,8 +24,4 @@
     <ProjectReference Include="..\SimpleEWallet.Comon\SimpleEWallet.Comon.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="NewFolder\" />
-  </ItemGroup>
-
 </Project>

@@ -5,7 +5,7 @@ using SimpleEWallet.Transaction.Persistence;
 
 namespace SimpleEWallet.Transaction.Consumers
 {
-	public class AddTransactionConsumer(TransactionDbContext _dbContext) : IConsumer<AddTransactionMessage>
+	public class AddTransactionConsumer(TransactionDbContext _dbContext, ISendEndpointProvider send) : IConsumer<AddTransactionMessage>
 	{
 		public async Task Consume(ConsumeContext<AddTransactionMessage> context)
 		{
@@ -30,6 +30,17 @@ namespace SimpleEWallet.Transaction.Consumers
 
 				await _dbContext.TrnTransactions.AddAsync(transaction);
 				await _dbContext.SaveChangesAsync();
+
+				UpdateTransactionIdMessage message = new()
+				{
+					UserId = data.UserId,
+					TransactionRequestId = data.TransactionRequestId,
+					TransactionId = transaction.Id,
+					TransactionTypeId = data.TransactionTypeId
+				};
+				ISendEndpoint sendEndpoint = await send.GetSendEndpoint(new Uri("queue:" + MQQueueNames.Wallet.UpdateTransactionId));
+				await sendEndpoint.Send(message);
+
 				await _dbContext.Database.CommitTransactionAsync();
 			}
 			catch

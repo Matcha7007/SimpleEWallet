@@ -139,7 +139,8 @@ namespace SimpleEWallet.Wallet.Features.Commands
 						WalletId = walletUser.Id,
 						TransactionTypeId = TransactionTypeConstants.TransferOut.ToInt32(),
 						Amount = transferRequest.Amount,
-						Reference = transferRequest.Description
+						Reference = transferRequest.Description,
+						TransactionRequestId = transferRequest.Id
 					};
 					ISendEndpoint sendEndpoint = await send.GetSendEndpoint(new Uri("queue:" + MQQueueNames.Transaction.AddTransaction));
 					await sendEndpoint.Send(messageOut, cancellationToken);
@@ -150,7 +151,8 @@ namespace SimpleEWallet.Wallet.Features.Commands
 						WalletId = walletReceiver.Id,
 						TransactionTypeId = TransactionTypeConstants.TransferIn.ToInt32(),
 						Amount = transferRequest.Amount,
-						Reference = transferRequest.Description
+						Reference = transferRequest.Description,
+						TransactionRequestId = transferRequest.Id
 					};
 
 					await sendEndpoint.Send(messageIn, cancellationToken);

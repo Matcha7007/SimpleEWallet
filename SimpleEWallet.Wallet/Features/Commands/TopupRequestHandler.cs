@@ -96,7 +96,8 @@ namespace SimpleEWallet.Wallet.Features.Commands
 						UserId = (Guid)request.Parameters.UserId!,
 						WalletId = walletUser.Id,
 						TransactionTypeId = TransactionTypeConstants.Topup.ToInt32(),
-						Amount = topupRequest.Amount
+						Amount = topupRequest.Amount,
+						TransactionRequestId = topupRequest.Id
 					};
 					ISendEndpoint sendEndpoint = await send.GetSendEndpoint(new Uri("queue:" + MQQueueNames.Transaction.AddTransaction));
 					await sendEndpoint.Send(message, cancellationToken);
@@ -107,8 +108,8 @@ namespace SimpleEWallet.Wallet.Features.Commands
 					response.Message = "Topup request is Failed";
 				}
 
-				await context.Database.CommitTransactionAsync(cancellationToken);
 				#endregion
+				await context.Database.CommitTransactionAsync(cancellationToken);
 			}
 			catch (Exception ex)
 			{
