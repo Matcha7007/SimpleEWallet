@@ -8,5 +8,10 @@
 			public static string UrlVerifyPin => "UrlVerifyPin";
 			public static decimal MinimumTopupAmount => 10000;
 		}
-    }
+
+		public static class Transaction
+		{
+			public static string UrlClaimToken => "UrlClaimToken";
+		}
+	}
 }
