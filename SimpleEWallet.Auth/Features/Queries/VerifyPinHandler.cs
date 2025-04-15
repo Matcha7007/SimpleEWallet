@@ -6,6 +6,7 @@ using SimpleEWallet.Auth.Persistence;
 using SimpleEWallet.Auth.Domain;
 using Microsoft.EntityFrameworkCore;
 using SimpleEWallet.Auth.Tools;
+using SimpleEWallet.Comon.Helpers;
 
 namespace SimpleEWallet.Auth.Features.Queries
 {

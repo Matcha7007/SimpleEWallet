@@ -17,7 +17,8 @@ namespace SimpleEWallet.Comon.Helpers
 			using (Aes aes = Aes.Create())
 			{
 				//Encode the key and set it for encryption
-				aes.Key = Encoding.UTF8.GetBytes(key);
+				byte[] keyBytes = SHA256.HashData(Encoding.UTF8.GetBytes(key));
+				aes.Key = keyBytes;
 
 				//Set the initialization vector (IV)
 				aes.IV = iv;
@@ -60,7 +61,8 @@ namespace SimpleEWallet.Comon.Helpers
 			using (Aes aes = Aes.Create())
 			{
 				//Encode the key and set it for encryption
-				aes.Key = Encoding.UTF8.GetBytes(key);
+				byte[] keyBytes = SHA256.HashData(Encoding.UTF8.GetBytes(key));
+				aes.Key = keyBytes;
 
 				//Set the initialization vector (IV)
 				aes.IV = iv;
