@@ -112,5 +112,21 @@ namespace SimpleEWallet.Auth.Controllers
 			}
 			return ResponseToActionResult(response);
 		}
+
+		[HttpPost("verify-pin")]
+		public async Task<IActionResult> VerifyPin([FromBody] VerifyPinParameters parameters)
+		{
+			VerifyPinResponse response = new();
+			try
+			{
+				ClaimTokenResponse claimTokenResponse = await _mediator.Send(new ClaimTokenQuery(this));
+				_ = !claimTokenResponse.IsValid ? response.SetUnauthorized() : response = await _mediator.Send(new VerifyPinQuery(parameters, claimTokenResponse.Data.Token));
+			}
+			catch (Exception ex)
+			{
+				response.SetErrorMessage(ex.Message);
+			}
+			return ResponseToActionResult(response);
+		}
 	}
 }

@@ -76,7 +76,7 @@ namespace SimpleEWallet.Wallet.Controllers
 			{
 				ClaimTokenResponse claimTokenResponse = await _mediator.Send(new ClaimTokenQuery(this));
 				parameters.UserId = claimTokenResponse.Data.UserId;
-				_ = !claimTokenResponse.IsValid ? response.SetUnauthorized() : response = await _mediator.Send(new TransferRequestCommand(parameters));
+				_ = !claimTokenResponse.IsValid ? response.SetUnauthorized() : response = await _mediator.Send(new TransferRequestCommand(parameters, claimTokenResponse.Data.Token));
 			}
 			catch (Exception ex)
 			{

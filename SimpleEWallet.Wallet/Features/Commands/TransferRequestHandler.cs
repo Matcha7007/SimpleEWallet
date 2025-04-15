@@ -9,10 +9,13 @@ using SimpleEWallet.Comon.Enumerations;
 using SimpleEWallet.Comon.Extensions;
 using SimpleEWallet.Comon.MQ;
 using MassTransit;
+using SimpleEWallet.Comon.Helpers;
+using SimpleEWallet.Comon.Models.Auth;
+using SimpleEWallet.Wallet.Features.Queries;
 
 namespace SimpleEWallet.Wallet.Features.Commands
 {
-	public class TransferRequestHandler(WalletDbContext context, ISendEndpointProvider send) : IRequestHandler<TransferRequestCommand, TopupTransferRequestResponse?>
+	public class TransferRequestHandler(WalletDbContext context, ISendEndpointProvider send, IMediator _mediator) : IRequestHandler<TransferRequestCommand, TopupTransferRequestResponse?>
 	{
 		public async Task<TopupTransferRequestResponse?> Handle(TransferRequestCommand request, CancellationToken cancellationToken)
 		{
@@ -40,6 +43,22 @@ namespace SimpleEWallet.Wallet.Features.Commands
 				if (request.Parameters.UserId == Guid.Empty)
 				{
 					response.SetValidationMessage("Token is invalid");
+					return response;
+				}
+				#endregion
+
+				#region Verify PIN
+				string url = await _mediator.Send(new GetConfigByKeyValueQuery(GlobalConstant.Wallet.UrlVerifyPin), cancellationToken);
+				VerifyPinParameters verifyPinParameters = new()
+				{
+					UserId = (Guid)request.Parameters.UserId!,
+					Pin = request.Parameters.Pin
+				};
+				VerifyPinResponse verifyPinResponse = await HttpHelper.PostJsonAsync<VerifyPinParameters, VerifyPinResponse>(request.Token, verifyPinParameters, url);
+				
+				if (string.IsNullOrEmpty(verifyPinResponse.Result) || (AESEncryptionTool.Decrypt(request.Token, verifyPinResponse.Result) != "true"))
+				{
+					response.SetValidationMessage("PIN is incorrect");
 					return response;
 				}
 				#endregion
