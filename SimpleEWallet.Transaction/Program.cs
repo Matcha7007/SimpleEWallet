@@ -23,6 +23,9 @@ builder.Services.AddMassTransit(regisConfig =>
 	regisConfig.AddConsumersFromNamespaceContaining<AddTransactionConsumer>();
 	regisConfig.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter(false));
 
+	regisConfig.AddConsumersFromNamespaceContaining<DeleteDataTransactionConsumer>();
+	regisConfig.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter(false));
+
 	regisConfig.UsingRabbitMq((context, cfg) =>
 	{
 		// default ke host localhost
@@ -37,6 +40,13 @@ builder.Services.AddMassTransit(regisConfig =>
 			endpoint.Durable = true;
 			endpoint.UseMessageRetry(ret => ret.Interval(20, 10));
 			endpoint.ConfigureConsumer<AddTransactionConsumer>(context);
+		});
+
+		cfg.ReceiveEndpoint(MQQueueNames.Transaction.DeleteDataTransaction, endpoint =>
+		{
+			endpoint.Durable = true;
+			endpoint.UseMessageRetry(ret => ret.Interval(20, 10));
+			endpoint.ConfigureConsumer<DeleteDataTransactionConsumer>(context);
 		});
 
 		cfg.ConfigureEndpoints(context);

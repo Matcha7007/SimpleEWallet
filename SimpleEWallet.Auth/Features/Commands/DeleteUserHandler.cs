@@ -5,10 +5,12 @@ using SimpleEWallet.Comon.Base.WebAPI;
 using SimpleEWallet.Auth.Persistence;
 using SimpleEWallet.Auth.Domain;
 using Microsoft.EntityFrameworkCore;
+using MassTransit;
+using SimpleEWallet.Comon.MQ;
 
 namespace SimpleEWallet.Auth.Features.Commands
 {
-	public class DeleteUserHandler(AuthDbContext context) : IRequestHandler<DeleteUserCommand, UserResponse?>
+	public class DeleteUserHandler(AuthDbContext context, ISendEndpointProvider send) : IRequestHandler<DeleteUserCommand, UserResponse?>
 	{
 		public async Task<UserResponse?> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
 		{
@@ -43,6 +45,14 @@ namespace SimpleEWallet.Auth.Features.Commands
 				user.LastModifiedAt = DateTime.Now;
 				user.LastModifiedBy = request.Parameters.UserId;
 				await context.SaveChangesAsync(cancellationToken);
+
+				DeleteDataWalletMessage message = new()
+				{
+					UserId = request.Parameters.UserId
+				};
+				ISendEndpoint sendEndpoint = await send.GetSendEndpoint(new Uri("queue:" + MQQueueNames.Wallet.DeleteDataWallet));
+				await sendEndpoint.Send(message, cancellationToken);
+
 				response.Message = "User has been deleted";
 				#endregion
 			}
