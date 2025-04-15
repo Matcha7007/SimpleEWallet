@@ -10,6 +10,11 @@ using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json", optional: true)
+    .AddEnvironmentVariables();
+	
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -29,11 +34,11 @@ builder.Services.AddMassTransit(regisConfig =>
 	regisConfig.UsingRabbitMq((context, cfg) =>
 	{
 		// default ke host localhost
-		//cfg.Host("localhost", "/", hostConfig =>
-		//{
-		//	hostConfig.Username("admin");
-		//	hostConfig.Password("admin");
-		//});
+		cfg.Host("rabbitmq_wallet", "/", hostConfig =>
+		{
+			hostConfig.Username("guest");
+			hostConfig.Password("guest");
+		});
 
 		cfg.ReceiveEndpoint(MQQueueNames.Transaction.AddTransaction, endpoint =>
 		{

@@ -1,96 +1,143 @@
 services:
-  rabbitmq:
-    image: rabbitmq:3-management
+  rabbitmq_wallet:
+    image: rabbitmq:management
     ports:
       - "5672:5672"
       - "15672:15672"
+    networks:
+      - simple_ewallet_network
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
 
   auth-db:
-    image: postgres:16
+    image: postgres:latest
+    container_name: auth_db
+    restart: always
     environment:
-      POSTGRES_USER: ${AUTH_DB_USER}
-      POSTGRES_PASSWORD: ${AUTH_DB_PASS}
-      POSTGRES_DB: ${AUTH_DB_NAME}
+      POSTGRES_USER: admin_db
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: ewallet_db_auth
     ports:
       - "5433:5432"
+    networks:
+      - simple_ewallet_network
     volumes:
-      - auth-db-data:/var/lib/postgresql/data
+      - simple_ewallet_auth_db:/var/lib/postgresql/data
       - ./init/ewallet_db_auth.sql:/docker-entrypoint-initdb.d/init.sql
 
   wallet-db:
-    image: postgres:16
+    image: postgres:latest
+    container_name: wallet_db
+    restart: always
     environment:
-      POSTGRES_USER: ${WALLET_DB_USER}
-      POSTGRES_PASSWORD: ${WALLET_DB_PASS}
-      POSTGRES_DB: ${WALLET_DB_NAME}
+      POSTGRES_USER: admin_db
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: ewallet_db_wallet
     ports:
       - "5434:5432"
+    networks:
+      - simple_ewallet_network
     volumes:
-      - wallet-db-data:/var/lib/postgresql/data
+      - simple_ewallet_wallet_db:/var/lib/postgresql/data
       - ./init/ewallet_db_wallet.sql:/docker-entrypoint-initdb.d/init.sql
 
   transaction-db:
-    image: postgres:16
+    image: postgres:latest
+    container_name: transaction_db
+    restart: always
     environment:
-      POSTGRES_USER: ${TX_DB_USER}
-      POSTGRES_PASSWORD: ${TX_DB_PASS}
-      POSTGRES_DB: ${TX_DB_NAME}
+      POSTGRES_USER: admin_db
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: ewallet_db_transaction
     ports:
       - "5435:5432"
+    networks:
+      - simple_ewallet_network
     volumes:
-      - tx-db-data:/var/lib/postgresql/data
+      - simple_ewallet_transaction_db:/var/lib/postgresql/data
       - ./init/ewallet_db_transaction.sql:/docker-entrypoint-initdb.d/init.sql
-
-  notification-db:
-    image: postgres:16
-    environment:
-      POSTGRES_USER: ${NOTIF_DB_USER}
-      POSTGRES_PASSWORD: ${NOTIF_DB_PASS}
-      POSTGRES_DB: ${NOTIF_DB_NAME}
-    ports:
-      - "5436:5432"
-    volumes:
-      - notif-db-data:/var/lib/postgresql/data
-      - ./init/ewallet_db_notification.sql:/docker-entrypoint-initdb.d/init.sql
 
   auth-service:
     build:
-      context: ./SimpleEWallet.Auth
-    depends_on:
-      - auth-db
-      - rabbitmq
+      context: .
+      dockerfile: SimpleEWallet.Auth/Dockerfile
+    restart: always
     environment:
-      ConnectionStrings__DefaultConnection: Host=auth-db;Port=5432;Database=${AUTH_DB_NAME};Username=${AUTH_DB_USER};Password=${AUTH_DB_PASS}
+      - ASPNETCORE_URLS=http://0.0.0.0:7095
+      - ConnectionStrings__DbAuthConnection=User ID=admin_db;Password=admin;Host=auth_db;Port=5432;Database=ewallet_db_auth;Pooling=true;
+    depends_on:
+      auth-db:
+        condition: service_started
+      rabbitmq_wallet:
+        condition: service_healthy
+    ports:
+      - "7095:7095"
+    networks:
+      - simple_ewallet_network
 
   wallet-service:
     build:
-      context: ./SimpleEWallet.Wallet
-    depends_on:
-      - wallet-db
-      - rabbitmq
+      context: .
+      dockerfile: SimpleEWallet.Wallet/Dockerfile
+    restart: always
     environment:
-      ConnectionStrings__DefaultConnection: Host=wallet-db;Port=5432;Database=${WALLET_DB_NAME};Username=${WALLET_DB_USER};Password=${WALLET_DB_PASS}
+      - ASPNETCORE_URLS=http://0.0.0.0:7061
+    depends_on:
+      auth-db:
+        condition: service_started
+      rabbitmq_wallet:
+        condition: service_healthy
+    ports:
+      - "7061:7061"
+    networks:
+      - simple_ewallet_network
 
   transaction-service:
     build:
-      context: ./SimpleEWallet.Transaction
-    depends_on:
-      - transaction-db
-      - rabbitmq
+      context: .
+      dockerfile: SimpleEWallet.Transaction/Dockerfile
+    restart: always
     environment:
-      ConnectionStrings__DefaultConnection: Host=transaction-db;Port=5432;Database=${TX_DB_NAME};Username=${TX_DB_USER};Password=${TX_DB_PASS}
+      - ASPNETCORE_URLS=http://0.0.0.0:7294
+    depends_on:
+      auth-db:
+        condition: service_started
+      rabbitmq_wallet:
+        condition: service_healthy
+    ports:
+      - "7294:7294"
+    networks:
+      - simple_ewallet_network
 
   notification-service:
     build:
-      context: ./SimpleEWallet.Notification
-    depends_on:
-      - notification-db
-      - rabbitmq
+      context: .
+      dockerfile: SimpleEWallet.Notification/Dockerfile
+    ports:
+      - "5004:80"
+    networks:
+      - simple_ewallet_network
+
+  ewallet_pgadmin:
+    image: dpage/pgadmin4
+    container_name: ewallet_pgadmin
+    restart: always
     environment:
-      ConnectionStrings__DefaultConnection: Host=notification-db;Port=5432;Database=${NOTIF_DB_NAME};Username=${NOTIF_DB_USER};Password=${NOTIF_DB_PASS}
+      PGADMIN_DEFAULT_EMAIL: admin@simpleewallet.com
+      PGADMIN_DEFAULT_PASSWORD: P@ssw0rd
+    ports:
+      - "5051:80"
+    networks:
+      - simple_ewallet_network
+
+networks:
+  simple_ewallet_network:
+    driver: bridge
 
 volumes:
-  auth-db-data:
-  wallet-db-data:
-  tx-db-data:
-  notif-db-data:
+  simple_ewallet_auth_db:
+  simple_ewallet_wallet_db:
+  simple_ewallet_transaction_db:

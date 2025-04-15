@@ -145,7 +145,7 @@ ALTER VIEW public.vw_transaction_list_data OWNER TO admin_db;
 --
 
 COPY public.mst_config (id, config_key, config_value, is_active, created_by, created_at, last_modified_by, last_modified_at) FROM stdin;
-1	UrlClaimToken	https://localhost:7095/api/v1/Auth/claim-token	t	\N	17:13:54.915526	\N	17:13:54.915526
+1	UrlClaimToken	http://simpleewallet-auth-service-1:7095/api/v1/Auth/claim-token	t	\N	17:13:54.915526	\N	17:13:54.915526
 \.
 
 

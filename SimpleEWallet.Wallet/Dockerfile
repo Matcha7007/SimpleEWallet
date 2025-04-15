@@ -10,6 +10,8 @@ RUN dotnet restore "SimpleEWallet.Wallet/SimpleEWallet.Wallet.csproj"
 # Salin seluruh isi solution
 COPY . .
 
+COPY SimpleEWallet.Wallet/appsettings.json ./SimpleEWallet.Wallet/appsettings.json
+
 # Build project
 WORKDIR /app/SimpleEWallet.Wallet
 RUN dotnet publish -c Release -o /out

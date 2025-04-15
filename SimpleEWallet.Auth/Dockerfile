@@ -10,6 +10,8 @@ RUN dotnet restore "SimpleEWallet.Auth/SimpleEWallet.Auth.csproj"
 # Salin seluruh isi solution
 COPY . .
 
+COPY SimpleEWallet.Auth/appsettings.json ./SimpleEWallet.Auth/appsettings.json
+
 # Build project
 WORKDIR /app/SimpleEWallet.Auth
 RUN dotnet publish -c Release -o /out

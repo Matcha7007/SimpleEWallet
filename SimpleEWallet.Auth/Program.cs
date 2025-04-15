@@ -6,6 +6,11 @@ using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json", optional: true)
+    .AddEnvironmentVariables();
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -16,29 +21,20 @@ builder.Services.AddSwaggerGen();
 #region MassTransit
 builder.Services.AddMassTransit(regisConfig =>
 {
-	//regisConfig.AddConsumersFromNamespaceContaining<InitializeWalletConsumer>();
-	//regisConfig.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter(false));
-
 	regisConfig.UsingRabbitMq((context, cfg) =>
 	{
 		// default ke host localhost
-		//cfg.Host("localhost", "/", hostConfig =>
-		//{
-		//	hostConfig.Username("admin");
-		//	hostConfig.Password("admin");
-		//});
-
-		//cfg.ReceiveEndpoint(MQQueueNames.Wallet.InitializeWallet, endpoint =>
-		//{
-		//	endpoint.Durable = true;
-		//	endpoint.UseMessageRetry(ret => ret.Interval(20, 10));
-		//	endpoint.ConfigureConsumer<InitializeWalletConsumer>(context);
-		//});
+		cfg.Host("rabbitmq_wallet", "/", hostConfig =>
+		{
+			hostConfig.Username("guest");
+			hostConfig.Password("guest");
+		});
 
 		cfg.ConfigureEndpoints(context);
 	});
 });
 #endregion
+Console.WriteLine($"[DEBUG] DB Connection: {builder.Configuration.GetConnectionString("DbAuthConnection")}");
 
 builder.Services.AddDbContext<AuthDbContext>(option =>
 {
