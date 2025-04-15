@@ -34,10 +34,27 @@ namespace SimpleEWallet.Wallet.Controllers
 			return ResponseToActionResult(response);
 		}
 
+		[HttpPost("get-self-wallet")]
+		public async Task<IActionResult> GetSelfWallet()
+		{
+			GetWalletByUserIdResponse response = new();
+			try
+			{
+				ClaimTokenResponse claimTokenResponse = await _mediator.Send(new ClaimTokenQuery(this));
+				GetWalletByUserIdParameters parameters = new() { UserId = claimTokenResponse.Data.UserId };
+				_ = !claimTokenResponse.IsValid ? response.SetUnauthorized() : response = await _mediator.Send(new GetWalletByUserIdQuery(parameters));
+			}
+			catch (Exception ex)
+			{
+				response.SetErrorMessage(ex.Message);
+			}
+			return ResponseToActionResult(response);
+		}
+
 		[HttpPost("topup-request")]
 		public async Task<IActionResult> TopUpRequest([FromBody] TopupRequestParameters parameters)
 		{
-			TopupRequestResponse response = new();
+			TopupTransferRequestResponse response = new();
 			try
 			{
 				ClaimTokenResponse claimTokenResponse = await _mediator.Send(new ClaimTokenQuery(this));
@@ -52,13 +69,14 @@ namespace SimpleEWallet.Wallet.Controllers
 		}
 
 		[HttpPost("transfer-request")]
-		public async Task<IActionResult> TransferRequest([FromBody] GetWalletByUserIdParameters parameters)
+		public async Task<IActionResult> TransferRequest([FromBody] TransferRequestParameters parameters)
 		{
-			GetWalletByUserIdResponse response = new();
+			TopupTransferRequestResponse response = new();
 			try
 			{
 				ClaimTokenResponse claimTokenResponse = await _mediator.Send(new ClaimTokenQuery(this));
-				_ = !claimTokenResponse.IsValid ? response.SetUnauthorized() : response = await _mediator.Send(new GetWalletByUserIdQuery(parameters));
+				parameters.UserId = claimTokenResponse.Data.UserId;
+				_ = !claimTokenResponse.IsValid ? response.SetUnauthorized() : response = await _mediator.Send(new TransferRequestCommand(parameters));
 			}
 			catch (Exception ex)
 			{

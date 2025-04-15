@@ -26,6 +26,9 @@ builder.Services.AddMassTransit(regisConfig =>
 	regisConfig.AddConsumersFromNamespaceContaining<UpdateStatusTopupConsumer>();
 	regisConfig.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter(false));
 
+	regisConfig.AddConsumersFromNamespaceContaining<UpdateStatusTransferConsumer>();
+	regisConfig.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter(false));
+
 	regisConfig.UsingRabbitMq((context, cfg) =>
 	{
 		// default ke host localhost
@@ -47,6 +50,13 @@ builder.Services.AddMassTransit(regisConfig =>
 			endpoint.Durable = true;
 			endpoint.UseMessageRetry(ret => ret.Interval(20, 10));
 			endpoint.ConfigureConsumer<UpdateStatusTopupConsumer>(context);
+		});
+
+		cfg.ReceiveEndpoint(MQQueueNames.Wallet.UpdateStatusTransfer, endpoint =>
+		{
+			endpoint.Durable = true;
+			endpoint.UseMessageRetry(ret => ret.Interval(20, 10));
+			endpoint.ConfigureConsumer<UpdateStatusTransferConsumer>(context);
 		});
 
 		cfg.ConfigureEndpoints(context);

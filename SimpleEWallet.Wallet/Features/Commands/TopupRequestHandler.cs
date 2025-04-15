@@ -12,11 +12,11 @@ using MassTransit;
 
 namespace SimpleEWallet.Wallet.Features.Commands
 {
-	public class TopupRequestHandler(WalletDbContext context, ISendEndpointProvider send) : IRequestHandler<TopupRequestCommand, TopupRequestResponse?>
+	public class TopupRequestHandler(WalletDbContext context, ISendEndpointProvider send) : IRequestHandler<TopupRequestCommand, TopupTransferRequestResponse?>
 	{
-		public async Task<TopupRequestResponse?> Handle(TopupRequestCommand request, CancellationToken cancellationToken)
+		public async Task<TopupTransferRequestResponse?> Handle(TopupRequestCommand request, CancellationToken cancellationToken)
 		{
-			TopupRequestResponse response = new();
+			TopupTransferRequestResponse response = new();
 			try
 			{
 				await context.Database.BeginTransactionAsync(cancellationToken);

@@ -6,6 +6,7 @@
 		{
 			public static string InitializeWallet => "simple_ewallet_wallet_initialize";
 			public static string UpdateStatusTopup => "simple_ewallet_update_status_topup";
+			public static string UpdateStatusTransfer => "simple_ewallet_update_status_transfer";
 		}
 
 		public static class Transaction

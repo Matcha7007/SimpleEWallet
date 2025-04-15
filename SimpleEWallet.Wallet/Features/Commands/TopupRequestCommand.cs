@@ -4,5 +4,5 @@ using SimpleEWallet.Comon.Models.Wallet;
 
 namespace SimpleEWallet.Wallet.Features.Commands
 {
-	public record TopupRequestCommand(TopupRequestParameters Parameters) : IRequest<TopupRequestResponse>;
+	public record TopupRequestCommand(TopupRequestParameters Parameters) : IRequest<TopupTransferRequestResponse>;
 }
