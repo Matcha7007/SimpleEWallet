@@ -1,0 +1,96 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  auth-db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: ${AUTH_DB_USER}
+      POSTGRES_PASSWORD: ${AUTH_DB_PASS}
+      POSTGRES_DB: ${AUTH_DB_NAME}
+    ports:
+      - "5433:5432"
+    volumes:
+      - auth-db-data:/var/lib/postgresql/data
+      - ./init/ewallet_db_auth.sql:/docker-entrypoint-initdb.d/init.sql
+
+  wallet-db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: ${WALLET_DB_USER}
+      POSTGRES_PASSWORD: ${WALLET_DB_PASS}
+      POSTGRES_DB: ${WALLET_DB_NAME}
+    ports:
+      - "5434:5432"
+    volumes:
+      - wallet-db-data:/var/lib/postgresql/data
+      - ./init/ewallet_db_wallet.sql:/docker-entrypoint-initdb.d/init.sql
+
+  transaction-db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: ${TX_DB_USER}
+      POSTGRES_PASSWORD: ${TX_DB_PASS}
+      POSTGRES_DB: ${TX_DB_NAME}
+    ports:
+      - "5435:5432"
+    volumes:
+      - tx-db-data:/var/lib/postgresql/data
+      - ./init/ewallet_db_transaction.sql:/docker-entrypoint-initdb.d/init.sql
+
+  notification-db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: ${NOTIF_DB_USER}
+      POSTGRES_PASSWORD: ${NOTIF_DB_PASS}
+      POSTGRES_DB: ${NOTIF_DB_NAME}
+    ports:
+      - "5436:5432"
+    volumes:
+      - notif-db-data:/var/lib/postgresql/data
+      - ./init/ewallet_db_notification.sql:/docker-entrypoint-initdb.d/init.sql
+
+  auth-service:
+    build:
+      context: ./SimpleEWallet.Auth
+    depends_on:
+      - auth-db
+      - rabbitmq
+    environment:
+      ConnectionStrings__DefaultConnection: Host=auth-db;Port=5432;Database=${AUTH_DB_NAME};Username=${AUTH_DB_USER};Password=${AUTH_DB_PASS}
+
+  wallet-service:
+    build:
+      context: ./SimpleEWallet.Wallet
+    depends_on:
+      - wallet-db
+      - rabbitmq
+    environment:
+      ConnectionStrings__DefaultConnection: Host=wallet-db;Port=5432;Database=${WALLET_DB_NAME};Username=${WALLET_DB_USER};Password=${WALLET_DB_PASS}
+
+  transaction-service:
+    build:
+      context: ./SimpleEWallet.Transaction
+    depends_on:
+      - transaction-db
+      - rabbitmq
+    environment:
+      ConnectionStrings__DefaultConnection: Host=transaction-db;Port=5432;Database=${TX_DB_NAME};Username=${TX_DB_USER};Password=${TX_DB_PASS}
+
+  notification-service:
+    build:
+      context: ./SimpleEWallet.Notification
+    depends_on:
+      - notification-db
+      - rabbitmq
+    environment:
+      ConnectionStrings__DefaultConnection: Host=notification-db;Port=5432;Database=${NOTIF_DB_NAME};Username=${NOTIF_DB_USER};Password=${NOTIF_DB_PASS}
+
+volumes:
+  auth-db-data:
+  wallet-db-data:
+  tx-db-data:
+  notif-db-data:
