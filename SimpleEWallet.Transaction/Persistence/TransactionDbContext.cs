@@ -22,6 +22,8 @@ public partial class TransactionDbContext : DbContext
 
     public virtual DbSet<TrnTransaction> TrnTransactions { get; set; }
 
+    public virtual DbSet<VwTransactionListDatum> VwTransactionListData { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseNpgsql("User ID=admin_db;Password=admin;Server=localhost;Port=5432;Database=ewallet_db_transaction;Pooling=true;");
@@ -111,6 +113,28 @@ public partial class TransactionDbContext : DbContext
             entity.Property(e => e.TransactionTypeId)
                 .HasDefaultValue(1)
                 .HasColumnName("transaction_type_id");
+            entity.Property(e => e.WalletId).HasColumnName("wallet_id");
+        });
+
+        modelBuilder.Entity<VwTransactionListDatum>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("vw_transaction_list_data");
+
+            entity.Property(e => e.Amount)
+                .HasColumnType("money")
+                .HasColumnName("amount");
+            entity.Property(e => e.CashFlow).HasColumnName("cash_flow");
+            entity.Property(e => e.Reference).HasColumnName("reference");
+            entity.Property(e => e.TransactionDate)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("transaction_date");
+            entity.Property(e => e.TransactionId).HasColumnName("transaction_id");
+            entity.Property(e => e.TransactionTypeId).HasColumnName("transaction_type_id");
+            entity.Property(e => e.TransactionTypeName)
+                .HasMaxLength(50)
+                .HasColumnName("transaction_type_name");
             entity.Property(e => e.WalletId).HasColumnName("wallet_id");
         });
 

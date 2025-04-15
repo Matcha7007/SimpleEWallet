@@ -148,6 +148,7 @@ public partial class WalletDbContext : DbContext
             entity.Property(e => e.StatusId)
                 .HasDefaultValue(1)
                 .HasColumnName("status_id");
+            entity.Property(e => e.TransactionId).HasColumnName("transaction_id");
             entity.Property(e => e.WalletId).HasColumnName("wallet_id");
 
             entity.HasOne(d => d.Status).WithMany(p => p.TrnTopupRequests)
@@ -191,6 +192,7 @@ public partial class WalletDbContext : DbContext
             entity.Property(e => e.StatusId)
                 .HasDefaultValue(1)
                 .HasColumnName("status_id");
+            entity.Property(e => e.TransactionId).HasColumnName("transaction_id");
 
             entity.HasOne(d => d.ReceiverWallet).WithMany(p => p.TrnTransferReceiverWallets)
                 .HasForeignKey(d => d.ReceiverWalletId)

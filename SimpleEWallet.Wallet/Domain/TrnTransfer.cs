@@ -27,6 +27,8 @@ public partial class TrnTransfer
 
     public DateTime? LastModifiedAt { get; set; }
 
+    public Guid? TransactionId { get; set; }
+
     public virtual MstWallet ReceiverWallet { get; set; } = null!;
 
     public virtual MstWallet SenderWallet { get; set; } = null!;

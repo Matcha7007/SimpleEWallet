@@ -23,6 +23,8 @@ public partial class TrnTopupRequest
 
     public DateTime? LastModifiedAt { get; set; }
 
+    public Guid? TransactionId { get; set; }
+
     public virtual MstStatus? Status { get; set; }
 
     public virtual MstWallet Wallet { get; set; } = null!;
