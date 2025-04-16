@@ -1,0 +1,674 @@
+{
+	"info": {
+		"_postman_id": "bf3d8b89-cbda-4476-b1a5-2f9dee3c7193",
+		"name": "Simple e-Wallet",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "15835200"
+	},
+	"item": [
+		{
+			"name": "Auth/User Service",
+			"item": [
+				{
+					"name": "Auth/login",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"phone\": \"0812102663004\",\r\n    \"password\": \"P@ssw0rd\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrlAuthService}}/Auth/login",
+							"host": [
+								"{{BaseUrlAuthService}}"
+							],
+							"path": [
+								"Auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Auth/is-online",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BaseUrlAuthService}}/Auth/is-online",
+							"host": [
+								"{{BaseUrlAuthService}}"
+							],
+							"path": [
+								"Auth",
+								"is-online"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Auth/claim-token",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BearerTokenWallet}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{BaseUrlAuthService}}/Auth/claim-token",
+							"host": [
+								"{{BaseUrlAuthService}}"
+							],
+							"path": [
+								"Auth",
+								"claim-token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User/create",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"Similikiti2\",\r\n    \"fullName\": \"Wallet Tester 2\",\r\n    \"email\": \"wallet2@gmail.com\",\r\n    \"phone\": \"0812102663005\",\r\n    \"password\": \"P@ssw0rd\",\r\n    \"pin\": \"332444\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrlAuthService}}/User/create",
+							"host": [
+								"{{BaseUrlAuthService}}"
+							],
+							"path": [
+								"User",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User/update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BearerTokenWallet}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": \"dc0a7f1d-eac6-4005-888d-f679a2c9fdd9\",\r\n    \"fullName\": \"Ilham Khusyairi 2\",\r\n    \"email\": \"ikhusyairi@gmail.com\",\r\n    \"phone\": \"081210266270\",\r\n    \"password\": \"P@ssw0rd\",\r\n    \"pin\": \"332443\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrlAuthService}}/User/update",
+							"host": [
+								"{{BaseUrlAuthService}}"
+							],
+							"path": [
+								"User",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User/get-by-id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BearerTokenWallet}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": \"{{UserId}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrlAuthService}}/User/get-by-id",
+							"host": [
+								"{{BaseUrlAuthService}}"
+							],
+							"path": [
+								"User",
+								"get-by-id"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User/get-self-data",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BearerTokenWallet}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{BaseUrlAuthService}}/User/get-self-data",
+							"host": [
+								"{{BaseUrlAuthService}}"
+							],
+							"path": [
+								"User",
+								"get-self-data"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User/delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BearerTokenWallet}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": \"{{UserId}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrlAuthService}}/User/delete",
+							"host": [
+								"{{BaseUrlAuthService}}"
+							],
+							"path": [
+								"User",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User/search-receiver",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BearerTokenWallet}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"pageNumber\": 1,\r\n    \"pageSize\": 10,\r\n    \"orderBy\": \"username\",\r\n    \"isAscending\": true,\r\n    \"filter\": {\r\n        \"keyword\": \"\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrlAuthService}}/User/search-receiver",
+							"host": [
+								"{{BaseUrlAuthService}}"
+							],
+							"path": [
+								"User",
+								"search-receiver"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{BearerTokenWallet}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Wallet Service",
+			"item": [
+				{
+					"name": "Wallet/get-by-user-id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BearerTokenWallet}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": \"{{UserId}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrlWalletService}}/Wallet/get-by-user-id",
+							"host": [
+								"{{BaseUrlWalletService}}"
+							],
+							"path": [
+								"Wallet",
+								"get-by-user-id"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Wallet/get-self-wallet",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BearerTokenWallet}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{BaseUrlWalletService}}/Wallet/get-self-wallet",
+							"host": [
+								"{{BaseUrlWalletService}}"
+							],
+							"path": [
+								"Wallet",
+								"get-self-wallet"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Wallet/topup-request",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BearerTokenWallet}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"walletNumber\": \"0812102663004\",\r\n    \"amount\": 1500000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrlWalletService}}/Wallet/topup-request",
+							"host": [
+								"{{BaseUrlWalletService}}"
+							],
+							"path": [
+								"Wallet",
+								"topup-request"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Wallet/transfer-request",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BearerTokenWallet}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"walletNumberReceiver\": \"0812102663005\",\r\n    \"amount\": 200000,\r\n    \"pin\": \"332443\",\r\n    \"description\": \"Untuk beli bensin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrlWalletService}}/Wallet/transfer-request",
+							"host": [
+								"{{BaseUrlWalletService}}"
+							],
+							"path": [
+								"Wallet",
+								"transfer-request"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{BearerTokenWallet}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Transaction Service",
+			"item": [
+				{
+					"name": "Transaction/search-transaction-history",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BearerTokenWallet}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"pageNumber\": 1,\r\n    \"pageSize\": 100,\r\n    \"orderBy\": \"transactionDate\",\r\n    \"isAscending\": false,\r\n    \"filter\": {\r\n        \"walletId\": \"{{WalletId}}\",\r\n        \"filterPeriodFrom\": \"2025-04-01\",\r\n        \"filterPeriodTo\": \"2025-04-30\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrlTransactionService}}/Transaction/search-transaction-history",
+							"host": [
+								"{{BaseUrlTransactionService}}"
+							],
+							"path": [
+								"Transaction",
+								"search-transaction-history"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Transaction/is-online",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BearerTokenWallet}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BaseUrlTransactionService}}/Transaction/is-online",
+							"host": [
+								"{{BaseUrlTransactionService}}"
+							],
+							"path": [
+								"Transaction",
+								"is-online"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{BearerTokenWallet}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "Host",
+			"value": "localhost",
+			"type": "string"
+		},
+		{
+			"key": "VersionAPI",
+			"value": "v1",
+			"type": "string"
+		},
+		{
+			"key": "BearerTokenWallet",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJkYzBhN2YxZC1lYWM2LTQwMDUtODg4ZC1mNjc5YTJjOWZkZDkiLCJuYmYiOjE3NDQ2MTI2NDIsImV4cCI6MTc0NDYxMjk0MiwiaWF0IjoxNzQ0NjEyNjQyLCJpc3MiOiJKV1RBdXRoZW50aWNhdGlvblNpbXBsZUVXYWxsZXQiLCJhdWQiOiJKV1RTZXJ2aWNlU2ltcGxlRVdhbGxldENsaWVudCJ9.H_VOuw7aKWbpxC43EH8jUNUYOkhSbpYPnTAZ-xVzBs8",
+			"type": "string"
+		},
+		{
+			"key": "UserId",
+			"value": "dc0a7f1d-eac6-4005-888d-f679a2c9fdd9",
+			"type": "string"
+		},
+		{
+			"key": "BaseUrlAuthService",
+			"value": "https://{{Host}}:7095/api/{{VersionAPI}}",
+			"type": "string"
+		},
+		{
+			"key": "BaseUrlWalletService",
+			"value": "https://{{Host}}:7061/api/{{VersionAPI}}",
+			"type": "string"
+		},
+		{
+			"key": "BaseUrlTransactionService",
+			"value": "https://{{Host}}:7294/api/{{VersionAPI}}",
+			"type": "string"
+		},
+		{
+			"key": "WalletId",
+			"value": "dc0a7f1d-eac6-4005-888d-f679a2c9fdd9",
+			"type": "string"
+		}
+	]
+}
