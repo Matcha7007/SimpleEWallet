@@ -1,4 +1,3 @@
-
 # Mini Project Simple e-Wallet API
 
 Simple e-Wallet API adalah sebuah mini project microservice REST API yang dibangun menggunakan .NET 8. Project ini menggunakan PostgreSQL sebagai database, MediatR untuk komunikasi langsung antar objek tanpa perlu dependency injection manual, serta RabbitMQ sebagai message broker antar layanan.
